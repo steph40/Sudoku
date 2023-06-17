@@ -2,6 +2,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+import sudoku.*;
+
 public class GamePanel extends JPanel implements ActionListener {
     
     MoveListener listener;
@@ -18,6 +20,8 @@ public class GamePanel extends JPanel implements ActionListener {
     Color corFundoSelec2 = Color.GREEN;
 
     int numSelec = 1;
+    
+    int[][] values;
     
     public GamePanel() {
 
@@ -87,6 +91,10 @@ public class GamePanel extends JPanel implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
+        
+        if(values == null || values.length == 0) {
+            return;
+        }
 
         JButton source = (JButton) e.getSource();
 
@@ -95,7 +103,7 @@ public class GamePanel extends JPanel implements ActionListener {
         boolean achou = false;
         for (i = 0; i < 9; i++) {
             for (j = 0; j < 9; j++) {
-                if (jogo[i][j] == source) {
+                if (jogo[i][j] == source && !jogo[i][j].getText().equalsIgnoreCase(String.valueOf(values[i][j]))) {
                     achou = true;
                     break;
                 }
@@ -142,6 +150,20 @@ public class GamePanel extends JPanel implements ActionListener {
                 jogo[i][j].setText("");
             }
         }
+    }
+    
+    public void fillBoard(int[][] values) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if(values[i][j] == 0) {
+                    jogo[i][j].setText("");
+                } else {
+                    jogo[i][j].setText(String.valueOf(values[i][j]));
+                }
+            }
+        }
+        
+        this.values = values;
     }
 
 }
