@@ -7,7 +7,6 @@ import java.rmi.registry.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import sudoku.*;
 
 public class MainFrame extends javax.swing.JFrame implements MoveListener {
 

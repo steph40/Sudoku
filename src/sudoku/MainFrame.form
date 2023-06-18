@@ -118,7 +118,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="GamePanel" name="gameFrame">
+        <Component class="sudoku.GamePanel" name="gameFrame">
         </Component>
       </SubComponents>
     </Container>
