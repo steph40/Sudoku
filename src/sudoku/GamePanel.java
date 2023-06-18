@@ -1,8 +1,9 @@
+package sudoku;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-import sudoku.*;
 
 public class GamePanel extends JPanel implements ActionListener {
     

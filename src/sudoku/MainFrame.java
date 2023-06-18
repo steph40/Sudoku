@@ -1,3 +1,5 @@
+package sudoku;
+
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,7 +23,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
     
     public void onMove(Move move){
         try {
-            if(!remoteObj.move(move, username)) {
+            if(!remoteObj.move(move, player)) {
                 JOptionPane.showMessageDialog(null, "Wrong move, please correct it.", "Wrong move", JOptionPane.ERROR_MESSAGE);
             } else {
                 String message = "jogo: " + String.valueOf(move.getLine()) + "-" + String.valueOf(move.getColumn()) 
@@ -212,7 +214,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
             Registry reg = LocateRegistry.getRegistry(ip, port);
             remoteObj = (SudokuInterface) reg.lookup("sudoku");
             
-            player = new PlayerApp(this.messageTextArea);
+            player = new PlayerApp(this.messageTextArea, this.gameFrame);
             
             if(remoteObj.login(player, username)) {
                 this.loginButton.setEnabled(false);

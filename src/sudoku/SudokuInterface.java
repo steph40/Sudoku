@@ -18,5 +18,5 @@ public interface SudokuInterface extends Remote {
     
     void playerReady(PlayerInterface player) throws RemoteException; 
     int[][] getGame() throws RemoteException;
-    Boolean move(Move move, String username) throws RemoteException;
+    Boolean move(Move move, PlayerInterface player) throws RemoteException;
 }

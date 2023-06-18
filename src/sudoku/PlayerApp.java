@@ -15,10 +15,12 @@ import javax.swing.JTextArea;
 public class PlayerApp extends UnicastRemoteObject implements PlayerInterface {
 
     private JTextArea messageTextArea;
+    private GamePanel gameFrame;
     
-    public PlayerApp(JTextArea messageTextArea) throws RemoteException {
+    public PlayerApp(JTextArea messageTextArea, GamePanel gameFrame) throws RemoteException {
         super();
         this.messageTextArea = messageTextArea;
+        this.gameFrame = gameFrame;
     }
      
     @Override
@@ -34,14 +36,15 @@ public class PlayerApp extends UnicastRemoteObject implements PlayerInterface {
     }
 
     @Override
-    public void playerMove(String username) throws RemoteException {
-        String message = "Player " + username + " did a correct move.";
+    public void playerMove(String username, String score) throws RemoteException {
+        String message = "Player " + username + " did a correct move. Current score: " + score;
         messageTextArea.append(message + "\n");
     }
 
     @Override
-    public void startGame() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void startGame(int[][] values) throws RemoteException {
+        System.out.println("ok");
+        gameFrame.fillBoard(values);
     }
     
 }
