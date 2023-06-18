@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements ActionListener {
     JPanel selecPanel = new JPanel();
 
     Color corFundoJogo1 = new Color(255, 255, 255);
-    Color corFundoJogo2 = Color.CYAN;
+    Color corFundoJogo2 = new Color(255, 255, 160);
     Color corFundoSelec1 = new Color(215, 255, 220);
     Color corFundoSelec2 = Color.GREEN;
 
@@ -116,13 +116,17 @@ public class GamePanel extends JPanel implements ActionListener {
         if (achou) {
             String message = "jogo: " + String.valueOf(i) + "-" + String.valueOf(j) + "- num " + String.valueOf(numSelec);
             System.out.println(message);
-            listener.onMove(new Move(i,j,numSelec));
+            
 
             if (numSelec == 0) {
                 jogo[i][j].setText("");
             } else {
                 jogo[i][j].setText(String.valueOf(numSelec));
+                jogo[i][j].setForeground(Color.BLUE);
             }
+            
+            listener.onMove(new Move(i,j,numSelec));
+            
         } else {
             for (i = 0; i < 10; i++) {
                 if (selec[i] == source) {
@@ -165,6 +169,10 @@ public class GamePanel extends JPanel implements ActionListener {
         }
         
         this.values = values;
+    }
+    
+    public void addValue(Move move) {
+        values[move.getLine()][move.getColumn()] = move.getValue();
     }
 
 }

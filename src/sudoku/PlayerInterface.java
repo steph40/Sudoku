@@ -17,4 +17,6 @@ public interface PlayerInterface extends Remote {
     
     public void startGame(int[][] values) throws RemoteException;
     public void playerMove(String username, String score) throws RemoteException;
+    
+    public void gameEnd(String username) throws RemoteException;
 }

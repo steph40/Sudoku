@@ -1,6 +1,5 @@
 package sudoku;
 
-import sudoku.*;
 
 public interface MoveListener {
     
