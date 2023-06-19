@@ -164,6 +164,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     jogo[i][j].setText("");
                 } else {
                     jogo[i][j].setText(String.valueOf(values[i][j]));
+                    jogo[i][j].setForeground(Color.BLACK);
                 }
             }
         }

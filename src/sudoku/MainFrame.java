@@ -1,8 +1,6 @@
 package sudoku;
 
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+
 import java.rmi.registry.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +8,8 @@ import javax.swing.JOptionPane;
 
 import java.rmi.*;
 import java.rmi.server.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class MainFrame extends javax.swing.JFrame implements MoveListener {
 
@@ -25,10 +25,10 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
     @Override
     public void onMove(Move move){
         try {
+            this.gameFrame.addValue(move);
             if(!remoteObj.move(move, player)) {
-                JOptionPane.showMessageDialog(this, "Wrong move, please correct it.", "Wrong move", JOptionPane.ERROR_MESSAGE);
-            } else {
-                this.gameFrame.addValue(move);
+                JOptionPane.showMessageDialog(null, "Wrong move, please correct it.", "Wrong move", JOptionPane.ERROR_MESSAGE);
+                this.gameFrame.addValue(new Move(move.getLine(), move.getColumn(), 0));
             }
         } catch (RemoteException ex) {
             System.out.println("Erro");
@@ -230,7 +230,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                 this.messageTextArea.setText("");
                 
                 if(remoteObj.getGameStatus()) {
-                    JOptionPane.showMessageDialog(null, "The game already started.", "Game started", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "The game already started.", "Game started", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                    Object[] options = {"Ready","Cancel"};
                     int opt = JOptionPane.showOptionDialog(null, "Press 'ready' when ready to start", "Ready to start?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
@@ -347,15 +347,42 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
 
     @Override
     public void startGame(int[][] values) throws RemoteException {
-        System.out.println("ok");
         gameFrame.fillBoard(values);
     }
 
     @Override
-    public void gameEnd(String username) throws RemoteException {
+    public void gameEnd(String usernameW) throws RemoteException {
         //o jogo acaba, anuncia-se quem ganhou
         //depois pergunta se está pronto para o proximo
-         System.out.println("Game ended");
+         SwingUtilities.invokeLater(() -> {
+              System.out.println("Game ended");
+             Object[] options = {"Ready","Cancel"};
+             String message;
+             if(username.equals(usernameW)) {
+                 message = "Congratulations, you won!\n";
+             } else {
+                 message = "Game ended, the winner is: " + usernameW + "\n";
+             }
+             gameFrame.cleanBoard();
+                    int opt = JOptionPane.showOptionDialog(null, message + "Press 'ready' when ready to start the next game", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                    
+                 try {
+                     if(opt == 0) {
+                        remoteObj.playerReady(player);
+                     } else {
+                        //faz logout e diz que o jogador saiu
+                        remoteObj.logout(player);
+                        logoutButton.setEnabled(false);
+                        loginButton.setEnabled(true);
+                    }
+                 } catch (RemoteException ex) {
+                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+                     
+            });
+         //testing();
+        
+            
     }
     
 }
