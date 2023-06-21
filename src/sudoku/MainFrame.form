@@ -52,7 +52,7 @@
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="startTimeLabel" min="-2" pref="128" max="-2" attributes="0"/>
+                      <Component id="startTimeLabel" min="-2" pref="197" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -197,9 +197,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="startTimeLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Game started at: 18:20"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>

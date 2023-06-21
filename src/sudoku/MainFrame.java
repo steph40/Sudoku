@@ -1,6 +1,5 @@
 package sudoku;
 
-
 import java.rmi.registry.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,6 +7,8 @@ import javax.swing.JOptionPane;
 
 import java.rmi.*;
 import java.rmi.server.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -16,17 +17,18 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
     SudokuInterface remoteObj;
     PlayerApp player;
     String username;
-    
+
+
     public MainFrame() {
         initComponents();
         this.gameFrame.setMoveListener(this);
     }
-    
+
     @Override
-    public void onMove(Move move){
+    public void onMove(Move move) {
         try {
             this.gameFrame.addValue(move);
-            if(!remoteObj.move(move, player)) {
+            if (!remoteObj.move(move, player)) {
                 JOptionPane.showMessageDialog(null, "Wrong move, please correct it.", "Wrong move", JOptionPane.ERROR_MESSAGE);
                 this.gameFrame.addValue(new Move(move.getLine(), move.getColumn(), 0));
             }
@@ -125,8 +127,6 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
             }
         });
 
-        startTimeLabel.setText("Game started at: 18:20");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -154,7 +154,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                             .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(logoutButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(startTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(startTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -206,36 +206,37 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
         int port;
         try {
             port = Integer.parseInt(this.portTextField.getText());
-        }catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Port must be a number", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         username = this.usernameTextField.getText();
-        
-        if(username.isEmpty() || username.isBlank()) {
+
+        if (username.isEmpty() || username.isBlank()) {
             JOptionPane.showMessageDialog(null, "Username can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         try {
             Registry reg = LocateRegistry.getRegistry(ip, port);
             remoteObj = (SudokuInterface) reg.lookup("sudoku");
-            
+
             player = new PlayerApp();
-            
-            if(remoteObj.login(player, username)) {
+
+            if (remoteObj.login(player, username)) {
                 this.loginButton.setEnabled(false);
                 this.logoutButton.setEnabled(true);
                 this.messageTextArea.setText("");
-                
-                if(remoteObj.getGameStatus()) {
+
+                if (remoteObj.getGameStatus()) {
                     JOptionPane.showMessageDialog(this, "The game already started.", "Game started", JOptionPane.INFORMATION_MESSAGE);
+
                 } else {
-                   Object[] options = {"Ready","Cancel"};
+                    Object[] options = {"Ready", "Cancel"};
                     int opt = JOptionPane.showOptionDialog(null, "Press 'ready' when ready to start", "Ready to start?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 
-                    if(opt == 0) {
+                    if (opt == 0) {
                         remoteObj.playerReady(player);
                     } else {
                         //faz logout e diz que o jogador saiu
@@ -245,14 +246,14 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                         this.loginButton.setEnabled(true);
                     }
                 }
-                
+
             } else {
                 JOptionPane.showMessageDialog(null, "Username already in use", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception ex) {
-           JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
@@ -262,6 +263,8 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
             this.gameFrame.cleanBoard();
             this.logoutButton.setEnabled(false);
             this.loginButton.setEnabled(true);
+            startTimeLabel.setText("");
+            messageTextArea.setText("");
 
         } catch (RemoteException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -319,71 +322,72 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 
-    
-    
     private class PlayerApp extends UnicastRemoteObject implements PlayerInterface {
 
-    public PlayerApp() throws RemoteException {
-        super();
-    }
-     
-    @Override
-    public void playerJoined(String username) throws RemoteException {
-        String message = "Player " + username + " joined the game.";
-        messageTextArea.append(message + "\n");
-    }
+        public PlayerApp() throws RemoteException {
+            super();
+        }
 
-    @Override
-    public void playerLeft(String username) throws RemoteException {
-        String message = "Player " + username + " left the game.";
-        messageTextArea.append(message + "\n");
-    }
+        @Override
+        public void playerJoined(String username) throws RemoteException {
+            String message = "Player " + username + " joined the game.";
+            messageTextArea.append(message + "\n");
+        }
 
-    @Override
-    public void playerMove(String username, String score) throws RemoteException {
-        String message = "Player " + username + " did a correct move. Current score: " + score;
-        messageTextArea.append(message + "\n");
-    }
+        @Override
+        public void playerLeft(String username) throws RemoteException {
+            String message = "Player " + username + " left the game.";
+            messageTextArea.append(message + "\n");
+        }
 
-    @Override
-    public void startGame(int[][] values) throws RemoteException {
-        gameFrame.fillBoard(values);
-    }
+        @Override
+        public void playerMove(String username, String score) throws RemoteException {
+            String message = "Player " + username + " did a correct move. Current score: " + score;
+            messageTextArea.append(message + "\n");
+        }
 
-    @Override
-    public void gameEnd(String usernameW) throws RemoteException {
-        //o jogo acaba, anuncia-se quem ganhou
-        //depois pergunta se está pronto para o proximo
-         SwingUtilities.invokeLater(() -> {
-              System.out.println("Game ended");
-             Object[] options = {"Ready","Cancel"};
-             String message;
-             if(username.equals(usernameW)) {
-                 message = "Congratulations, you won!\n";
-             } else {
-                 message = "Game ended, the winner is: " + usernameW + "\n";
-             }
-             gameFrame.cleanBoard();
-                    int opt = JOptionPane.showOptionDialog(null, message + "Press 'ready' when ready to start the next game", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-                    
-                 try {
-                     if(opt == 0) {
+        @Override
+        public void startGame(int[][] values , LocalDateTime horaAtual) throws RemoteException {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            startTimeLabel.setText("Game started at: " + horaAtual.format(formatter));
+            gameFrame.fillBoard(values);
+        }
+
+        @Override
+        public void gameEnd(String usernameW) throws RemoteException {
+            //o jogo acaba, anuncia-se quem ganhou
+            //depois pergunta se está pronto para o proximo
+            SwingUtilities.invokeLater(() -> {
+                System.out.println("Game ended");
+                Object[] options = {"Ready", "Cancel"};
+                String message;
+                if (username.equals(usernameW)) {
+                    message = "Congratulations, you won!\n";
+                } else {
+                    message = "Game ended, the winner is: " + usernameW + "\n";
+                }
+                gameFrame.cleanBoard();
+                startTimeLabel.setText("");
+                messageTextArea.setText("");
+                int opt = JOptionPane.showOptionDialog(null, message + "Press 'ready' when ready to start the next game", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+
+                try {
+                    if (opt == 0) {
                         remoteObj.playerReady(player);
-                     } else {
+                    } else {
                         //faz logout e diz que o jogador saiu
                         remoteObj.logout(player);
                         logoutButton.setEnabled(false);
                         loginButton.setEnabled(true);
                     }
-                 } catch (RemoteException ex) {
-                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-                     
+                } catch (RemoteException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             });
-         //testing();
-        
-            
+            //testing();
+
+        }
+
     }
-    
-}
 }
