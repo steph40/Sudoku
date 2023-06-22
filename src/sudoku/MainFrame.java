@@ -359,7 +359,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                 Object[] options = {"Ready", "Cancel"};
                 String message;
                 if (username.equals(usernameW)) {
-                    message = "CongratulaSwingUtilities.invokeLater(() tions, you won!\n";
+                    message = "Congratulations, you won!\n";
                 } else {
                     message = "Game ended, the winner is: " + usernameW + "\n";
                 }
