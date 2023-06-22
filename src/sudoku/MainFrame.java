@@ -1,15 +1,11 @@
 package sudoku;
 
 import java.rmi.registry.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
 import java.rmi.*;
 import java.rmi.server.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MainFrame extends javax.swing.JFrame implements MoveListener {
@@ -33,7 +29,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                 this.gameFrame.addValue(new Move(move.getLine(), move.getColumn(), 0));
             }
         } catch (RemoteException ex) {
-            System.out.println("Erro");
+             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -266,8 +262,9 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
             startTimeLabel.setText("");
             messageTextArea.setText("");
 
+           
         } catch (RemoteException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_logoutButtonActionPerformed
 
@@ -362,7 +359,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                 Object[] options = {"Ready", "Cancel"};
                 String message;
                 if (username.equals(usernameW)) {
-                    message = "Congratulations, you won!\n";
+                    message = "CongratulaSwingUtilities.invokeLater(() tions, you won!\n";
                 } else {
                     message = "Game ended, the winner is: " + usernameW + "\n";
                 }
@@ -381,12 +378,10 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
                         loginButton.setEnabled(true);
                     }
                 } catch (RemoteException ex) {
-                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
             });
-            //testing();
-
         }
 
     }
