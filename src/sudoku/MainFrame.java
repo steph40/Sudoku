@@ -57,7 +57,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
         startTimeLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Test Sudoku");
+        setTitle("Sudoku");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Game"));
 
