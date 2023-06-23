@@ -86,7 +86,6 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
 
         jLabel2.setText("Username:");
 
-        ipTextField.setText("127.0.0.1");
         ipTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ipTextFieldActionPerformed(evt);
@@ -101,7 +100,6 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
 
         jLabel3.setText("Port:");
 
-        portTextField.setText("1099");
         portTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 portTextFieldActionPerformed(evt);
