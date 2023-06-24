@@ -155,6 +155,8 @@ public class GamePanel extends JPanel implements ActionListener {
                 jogo[i][j].setText("");
             }
         }
+        
+        this.values = null;
     }
     
     public void fillBoard(int[][] values) {
