@@ -279,6 +279,7 @@ public class MainFrame extends javax.swing.JFrame implements MoveListener {
         try {
             // TODO add your handling code here:
             remoteObj.logout(player);
+            remoteObj = null;
             this.gameFrame.cleanBoard();
             this.logoutButton.setEnabled(false);
             this.loginButton.setEnabled(true);
